@@ -1,7 +1,11 @@
 import numpy as np
 import random
 import os
-from sklearn.preprocessing import MinMaxScaler
+try:
+    from sklearn.preprocessing import MinMaxScaler
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
 
 
 class LSTMPredictor:
@@ -19,9 +23,8 @@ class LSTMPredictor:
                 self.model = None
         else:
             print("No trained model found — using dummy predictions")
-
     def predict(self, close_prices: list) -> float:
-        if self.model is None:
+        if self.model is None or not SKLEARN_AVAILABLE:
             last_price = close_prices[-1]
             dummy = last_price * random.uniform(0.98, 1.02)
             return round(float(dummy), 2)
